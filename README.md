@@ -49,3 +49,88 @@ Download from [ollama.com](https://ollama.com) and pull at least one model:
 
 ```bash
 ollama pull qwen3.5-vision:latest
+```
+
+Any instruction-tuned or vision-capable model works. Larger models write better prompts.
+
+### 2. Install the node
+
+**Via git:**
+
+```bash
+cd ComfyUI/custom_nodes
+git clone https://github.com/Fatoran-ai/Prompt_Forge
+```
+
+**Manual:**
+
+Download the release zip, extract it, and place the `Prompt_Forge` folder inside `ComfyUI/custom_nodes/`.
+
+### 3. Restart ComfyUI
+
+Fully close and reopen ComfyUI, then hard-refresh the browser (`Ctrl + F5`).
+
+---
+
+## Usage
+
+1. Add the **Prompt Forge** node (category `Prompt Forge`).
+2. Click **⚡ Forge** under the textarea.
+3. Pick a tab (ANIMA, Flux, Qwen, …).
+4. Write a short brief, choose a model, set Creativity and Detail.
+5. Press **Generate** — the prompt appears in the node's textarea.
+
+Use the buttons on the node itself for quick actions:
+
+| Button | Action |
+|---|---|
+| **Clear** | Empty the prompt field |
+| **Copy** | Copy the prompt to the clipboard |
+| **⚡ Forge** | Open the overlay |
+
+---
+
+## Requirements
+
+- ComfyUI (tested on 0.40.0)
+- Python 3.10+
+- [Ollama](https://ollama.com) running locally (default `127.0.0.1:11434`)
+
+No other Python packages are required.
+
+---
+
+## Configuration
+
+By default, the node connects to Ollama at `http://127.0.0.1:11434`. To use a
+different address, set an environment variable before starting ComfyUI:
+
+```bash
+# Windows PowerShell
+$env:PROMPT_FORGE_OLLAMA_URL = "http://192.168.1.50:11434"
+
+# Linux / macOS
+export PROMPT_FORGE_OLLAMA_URL="http://192.168.1.50:11434"
+```
+
+---
+
+## Support
+
+☕ If this project saved you some time, you can buy me a coffee:
+
+**[☕ Buy me a coffee — DonationAlerts](https://www.donationalerts.com/r/Fatoran)**
+
+No pressure — the node is free and MIT-licensed. Use it however you like.
+
+---
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+---
+
+## Credits
+
+Built on top of the Ollama HTTP API. No third-party Python packages required.
