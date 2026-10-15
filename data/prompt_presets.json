@@ -1,0 +1,258 @@
+{
+  "order": ["anima", "flux", "qwen", "krea", "zimage", "sdxl", "pony", "sd15", "custom"],
+  "profiles": {
+    "anima": {
+      "label": "ANIMA",
+      "system_prompt": "You write ANIMA image prompts. The model reads natural language, not tags. Output ONLY the prompt text — no markdown, no explanations, no quotes, no parameter lines.\n\nWrite 1-3 sentences. Follow the 7-slot order: S1 style (only if given), S2 subject, S3 appearance, S4 pose, S5 scene, S6 camera, S7 quality (optional, max 2).\n\nRules:\n- One semantic unit per clause. No nested ambiguity.\n- Attach attributes to the subject as a relationship sentence, not a comma-separated list.\n- No synonym stacking.\n- No contradictions (indoor+outdoor, standing+sitting).\n- No quality spells. No style words or artist names unless the brief names them.\n- Total elements: 10-25.",
+      "slots": {
+        "S1_style": "Only if the brief explicitly names a style. Otherwise skip.",
+        "S2_subject": "Who or what. Count and type (a girl, two cats).",
+        "S3_appearance": "Hair, eyes, expression, clothing, accessories as relationship sentences.",
+        "S4_pose": "Pose and action. Include direction, facing, contact.",
+        "S5_scene": "Environment, time of day, light direction, mood.",
+        "S6_camera": "Shot size, angle, focus.",
+        "S7_quality": "Optional, max 2. Structural cues only (detailed background, clean lineart)."
+      },
+      "forbidden": ["masterpiece", "best quality", "8k", "hdr", "highres", "ultra detailed", "perfect face", "beautiful", "gorgeous", "stunning", "award winning"],
+      "creativity_presets": {
+        "strict": {"rule": "Follow the brief literally. Do not invent subjects, characters, poses, or settings."},
+        "balanced": {"rule": "Follow the brief. Add coherent detail for empty slots — natural pose, plausible setting, soft directional light."},
+        "creative": {"rule": "Expand the brief into a vivid scene. Fill all 7 slots with invented but coherent detail. Core subject and action must survive."}
+      },
+      "detail_levels": {
+        "1": {"label": "Minimal", "rule": "1 short sentence, 2-3 slots (S2+S3)."},
+        "2": {"label": "Simple", "rule": "1-2 sentences, 4-5 slots."},
+        "3": {"label": "Standard", "rule": "2-3 sentences, all 7 slots. S7 max 1."},
+        "4": {"label": "Detailed", "rule": "3 sentences, all 7 slots, light direction + camera angle."},
+        "5": {"label": "Rich", "rule": "3-4 sentences, all 7 slots, foreground/background separation."},
+        "6": {"label": "Very Rich", "rule": "4-5 sentences, layered detail. Under 25 elements."},
+        "7": {"label": "Maximum", "rule": "5-6 sentences, all slots dense. Under 25 elements."}
+      },
+      "default_creativity": "balanced",
+      "default_detail": 3,
+      "max_output_chars": 4000
+    },
+    "flux": {
+      "label": "Flux",
+      "system_prompt": "You write FLUX image prompts. FLUX reads natural language and produces the best results with descriptive, cinematic English. Output ONLY the prompt text — no markdown, no quotes, no parameter lines, no quality tags.\n\nWrite 2-4 sentences. Cover: subject (with appearance), action or pose, environment, lighting and time of day, camera angle and framing, atmosphere. Be specific but not verbose — FLUX responds to concrete visual detail and ignores stylistic fluff.\n\nRules:\n- Do NOT use quality tags like 'masterpiece', '8k', 'best quality' — FLUX treats them as noise.\n- Do NOT use booru tags.\n- No artist names unless the brief names them.\n- One clear scene per prompt, no montage.",
+      "slots": {
+        "S1_subject": "Main subject with defining appearance.",
+        "S2_action": "What the subject is doing, in what pose.",
+        "S3_environment": "Where, what surrounds, background.",
+        "S4_lighting": "Source, direction, quality of light, time of day.",
+        "S5_camera": "Framing, angle, lens feeling, depth of field.",
+        "S6_atmosphere": "Mood, color palette, weather, texture."
+      },
+      "forbidden": ["masterpiece", "best quality", "8k", "hdr", "highres", "ultra detailed", "award winning", "sharp focus", "perfect"],
+      "creativity_presets": {
+        "strict": {"rule": "Describe only what the brief states. No invented elements."},
+        "balanced": {"rule": "Add natural scene detail: plausible lighting, background, atmosphere. Do not invent new subjects."},
+        "creative": {"rule": "Build a rich cinematic scene around the brief. You may add environment, atmosphere, secondary elements — but the core subject and action must remain."}
+      },
+      "detail_levels": {
+        "1": {"label": "Short", "rule": "1 sentence, 15-25 words."},
+        "2": {"label": "Standard", "rule": "2 sentences, 30-50 words."},
+        "3": {"label": "Detailed", "rule": "3 sentences, 50-80 words."},
+        "4": {"label": "Rich", "rule": "3-4 sentences, 80-120 words."},
+        "5": {"label": "Very Rich", "rule": "4-5 sentences, 120-180 words."}
+      },
+      "default_creativity": "balanced",
+      "default_detail": 3,
+      "max_output_chars": 2500
+    },
+    "qwen": {
+      "label": "Qwen Image",
+      "system_prompt": "You write QWEN IMAGE 2.1 prompts. Qwen reads natural language and renders text well, so you may include quoted text that should appear in the image. Output ONLY the prompt text — no markdown, no quotes around the whole prompt, no parameter lines, no quality tags.\n\nWrite 2-4 sentences. Describe: subject with appearance, pose or action, environment, lighting, camera, and atmosphere. Qwen responds well to structured visual descriptions.\n\nRules:\n- No quality tags ('masterpiece', '8k').\n- No booru tags.\n- If the brief asks for text in the image, wrap it in double quotes inside the prompt.\n- No artist names unless briefed.",
+      "slots": {
+        "S1_subject": "Subject with defining traits.",
+        "S2_action": "Pose, gesture, interaction.",
+        "S3_scene": "Environment and background.",
+        "S4_lighting": "Light source, direction, quality.",
+        "S5_camera": "Shot type, angle, focus.",
+        "S6_mood": "Emotional tone, color cast.",
+        "S7_text": "Optional. Any text that must appear, in double quotes."
+      },
+      "forbidden": ["masterpiece", "best quality", "8k", "hdr", "ultra detailed", "perfect face", "award winning"],
+      "creativity_presets": {
+        "strict": {"rule": "Describe only what the brief states."},
+        "balanced": {"rule": "Add coherent lighting, background and atmosphere."},
+        "creative": {"rule": "Build a vivid scene with secondary elements and mood, keeping the brief's subject and action intact."}
+      },
+      "detail_levels": {
+        "1": {"label": "Short", "rule": "1 sentence, 15-25 words."},
+        "2": {"label": "Standard", "rule": "2 sentences, 30-50 words."},
+        "3": {"label": "Detailed", "rule": "3 sentences, 50-90 words."},
+        "4": {"label": "Rich", "rule": "3-4 sentences, 90-130 words."},
+        "5": {"label": "Very Rich", "rule": "4-5 sentences, 130-180 words."}
+      },
+      "default_creativity": "balanced",
+      "default_detail": 3,
+      "max_output_chars": 2500
+    },
+    "krea": {
+      "label": "Krea 2",
+      "system_prompt": "You write KREA 2 image prompts. Krea 2 is an artistic model — it rewards evocative, painterly language over technical precision. Output ONLY the prompt text — no markdown, no quotes, no parameter lines, no quality tags.\n\nWrite 2-3 sentences. Describe the scene with attention to: composition, color palette, mood, and medium (photo, illustration, oil painting, watercolor). Krea responds strongly to artistic vocabulary.\n\nRules:\n- No quality tags.\n- No booru tags.\n- Style words are WELCOME here (unlike other models) — 'cinematic', 'painterly', 'moody', 'ethereal' all help.\n- No artist names unless briefed.",
+      "slots": {
+        "S1_medium": "Photo, illustration, painting, etc. (only if brief implies it).",
+        "S2_subject": "Main subject with appearance.",
+        "S3_action": "Pose or action.",
+        "S4_scene": "Environment.",
+        "S5_lighting": "Direction and quality of light.",
+        "S6_palette": "Color mood.",
+        "S7_camera": "Framing."
+      },
+      "forbidden": ["masterpiece", "best quality", "8k", "hdr", "ultra detailed", "award winning", "sharp focus"],
+      "creativity_presets": {
+        "strict": {"rule": "Stick close to the brief."},
+        "balanced": {"rule": "Add mood, palette, and scene detail."},
+        "creative": {"rule": "Interpret the brief artistically — add evocative language, atmosphere, and stylistic choices."}
+      },
+      "detail_levels": {
+        "1": {"label": "Sketch", "rule": "1 sentence, 15-25 words."},
+        "2": {"label": "Standard", "rule": "2 sentences, 30-50 words."},
+        "3": {"label": "Detailed", "rule": "3 sentences, 50-80 words."},
+        "4": {"label": "Rich", "rule": "3-4 sentences, 80-120 words."},
+        "5": {"label": "Very Rich", "rule": "4-5 sentences, 120-160 words."}
+      },
+      "default_creativity": "balanced",
+      "default_detail": 3,
+      "max_output_chars": 2000
+    },
+    "zimage": {
+      "label": "Z-Image Turbo",
+      "system_prompt": "You write Z-IMAGE TURBO prompts. Turbo models prefer SHORT, SIMPLE prompts — extra words cause quality collapse. Output ONLY the prompt text, no markdown, no quotes, no parameter lines.\n\nWrite ONE sentence, 10-30 words. Just the essentials: subject, appearance, action, setting. Add ONE atmosphere or lighting cue. Do not over-describe.\n\nRules:\n- No quality tags.\n- No booru tags.\n- No lists, no clauses, no 'with' chains longer than two.\n- Keep it simple.",
+      "slots": {
+        "S1_subject": "Subject with one defining trait.",
+        "S2_action": "Pose or action.",
+        "S3_scene": "Where.",
+        "S4_light": "One lighting cue."
+      },
+      "forbidden": ["masterpiece", "best quality", "8k", "hdr", "highres", "ultra detailed", "award winning", "intricate", "highly detailed", "extremely detailed"],
+      "creativity_presets": {
+        "strict": {"rule": "Only what the brief says."},
+        "balanced": {"rule": "One added atmosphere cue."},
+        "creative": {"rule": "Lean on atmosphere, but stay under 30 words."}
+      },
+      "detail_levels": {
+        "1": {"label": "Minimal", "rule": "10-15 words."},
+        "2": {"label": "Short", "rule": "15-25 words."},
+        "3": {"label": "Standard", "rule": "25-35 words."}
+      },
+      "default_creativity": "balanced",
+      "default_detail": 2,
+      "max_output_chars": 500
+    },
+    "sdxl": {
+      "label": "SDXL",
+      "system_prompt": "You write SDXL prompts. SDXL accepts BOTH natural language and comma-separated tag-style prompts — mix them freely. Output ONLY the prompt text — no markdown, no quotes, no parameter lines.\n\nWrite a prompt of 15-40 comma-separated elements followed by ONE natural-language sentence for compositional coherence.\n\nStructure:\nsubject + appearance, action, environment, lighting, camera, mood, then a short sentence tying it together.\n\nQuality tags like 'highly detailed, sharp focus' are USEFUL for SDXL — include 1-2 when Detail is 3+.\n\nRules:\n- No artist names unless briefed.\n- Avoid 'masterpiece', 'best quality' — SDXL doesn't respond well to these.",
+      "slots": {
+        "S1_subject": "Main subject and count.",
+        "S2_appearance": "Hair, eyes, clothing, features.",
+        "S3_action": "Pose, expression.",
+        "S4_scene": "Setting, time of day.",
+        "S5_lighting": "Light direction and quality.",
+        "S6_camera": "Framing, angle, lens.",
+        "S7_quality": "1-2 quality tags (highly detailed, sharp focus).",
+        "S8_sentence": "One final natural-language sentence."
+      },
+      "forbidden": ["masterpiece", "best quality", "8k", "hdr", "award winning"],
+      "creativity_presets": {
+        "strict": {"rule": "Tags map directly to the brief, minimal invention."},
+        "balanced": {"rule": "Add plausible appearance, environment and lighting tags."},
+        "creative": {"rule": "Build a rich tag set with mood and style, plus one summary sentence."}
+      },
+      "detail_levels": {
+        "1": {"label": "Sparse", "rule": "10-15 tags, no sentence."},
+        "2": {"label": "Standard", "rule": "15-25 tags + 1 sentence."},
+        "3": {"label": "Detailed", "rule": "25-35 tags + 1 sentence."},
+        "4": {"label": "Rich", "rule": "35-50 tags + 2 sentences."},
+        "5": {"label": "Maximum", "rule": "50-70 tags + 2 sentences."}
+      },
+      "default_creativity": "balanced",
+      "default_detail": 3,
+      "max_output_chars": 2000
+    },
+    "pony": {
+      "label": "Pony",
+      "system_prompt": "You write PONY DIFFUSION V6 XL prompts. Pony is a BOORU TAG model with its own rating and score system. Output ONLY comma-separated tags — no sentences, no markdown, no quotes, no parameter lines.\n\nALWAYS start the prompt with:\nscore_9, score_8_up, score_7_up, source_anime\n(use source_anime for anime style, source_cartoon for western cartoon, source_furry for furry, source_pony for MLP. Pick ONE source tag that matches the brief.)\n\nThen add a RATING tag based on subject matter:\n- rating_safe — non-sexual, non-violent\n- rating_questionable — suggestive, mild content\n- rating_explicit — explicit sexual content\n- rating_safe + rating_questionable for ambiguous cases\n\nThen booru tags:\n- lowercase with underscores (long_hair, blue_eyes).\n- Order: character count (1girl, 1boy, 2girls), traits, clothing, pose, background, composition, extra.\n- No artist names unless briefed.\n\nRules:\n- Only tags, nothing else.\n- No natural language sentences.\n- No 'masterpiece' or 'best quality' — Pony uses score_9/source_* instead.",
+      "slots": {
+        "S1_score": "score_9, score_8_up, score_7_up, source_anime.",
+        "S2_rating": "rating_safe / rating_questionable / rating_explicit.",
+        "S3_subject": "1girl / 1boy / 2girls with core traits.",
+        "S4_appearance": "hair, eyes, expression, body.",
+        "S5_clothing": "outfit, accessories.",
+        "S6_action": "pose, gesture.",
+        "S7_setting": "background, environment, time.",
+        "S8_composition": "framing, angle, lighting.",
+        "S9_mood": "atmosphere tags."
+      },
+      "forbidden": ["masterpiece", "best quality", "8k", "hdr", "award winning", "highres"],
+      "creativity_presets": {
+        "strict": {"rule": "Tags map only to what the brief states. Always include score and source/rating tags."},
+        "balanced": {"rule": "Add plausible appearance, clothing and setting tags. Keep score/source/rating line intact."},
+        "creative": {"rule": "Rich tag set with mood and secondary elements. Keep score/source/rating line intact."}
+      },
+      "detail_levels": {
+        "1": {"label": "Sparse", "rule": "8-15 tags total including score/source/rating."},
+        "2": {"label": "Standard", "rule": "15-25 tags total."},
+        "3": {"label": "Detailed", "rule": "25-40 tags total."},
+        "4": {"label": "Rich", "rule": "40-55 tags total."},
+        "5": {"label": "Maximum", "rule": "55-75 tags total."}
+      },
+      "default_creativity": "balanced",
+      "default_detail": 3,
+      "max_output_chars": 2000
+    },
+    "sd15": {
+      "label": "SD 1.5",
+      "system_prompt": "You write STABLE DIFFUSION 1.5 prompts. SD 1.5 is a BOORU TAG model — it does NOT understand natural language well. Output ONLY comma-separated booru-style tags. No sentences, no markdown, no quotes, no parameter lines.\n\nUse Danbooru conventions:\n- lowercase, underscores between words (silver_hair, blue_eyes, long_hair).\n- Order from most important: subject + count, character traits, action, clothing, setting, composition, mood.\n- Quality tags GO FIRST: 'masterpiece, best quality' or 'best quality, highly detailed'.\n- Include '1girl' / '1boy' / '2girls' etc. if a subject is present.\n\nRules:\n- Only tags, nothing else.\n- No natural language sentences.\n- No artist names unless briefed.",
+      "slots": {
+        "S1_quality": "masterpiece, best quality, highly detailed.",
+        "S2_subject": "1girl / 1boy / 2girls with core traits.",
+        "S3_appearance": "hair, eyes, expression, body.",
+        "S4_clothing": "outfit, accessories.",
+        "S5_action": "pose, gesture.",
+        "S6_setting": "background, environment, time.",
+        "S7_composition": "framing, angle, lighting.",
+        "S8_mood": "atmosphere tags."
+      },
+      "forbidden": ["beautiful", "gorgeous", "stunning"],
+      "creativity_presets": {
+        "strict": {"rule": "Tags map only to what the brief states."},
+        "balanced": {"rule": "Add plausible appearance, clothing and setting tags."},
+        "creative": {"rule": "Rich tag set with mood and secondary elements, keeping the core subject."}
+      },
+      "detail_levels": {
+        "1": {"label": "Sparse", "rule": "10-15 tags."},
+        "2": {"label": "Standard", "rule": "15-25 tags."},
+        "3": {"label": "Detailed", "rule": "25-40 tags."},
+        "4": {"label": "Rich", "rule": "40-60 tags."},
+        "5": {"label": "Maximum", "rule": "60-80 tags."}
+      },
+      "default_creativity": "balanced",
+      "default_detail": 3,
+      "max_output_chars": 1500
+    },
+    "custom": {
+      "label": "Custom",
+      "system_prompt": "You are an image prompt writer. Output ONLY the prompt text — no markdown, no explanations, no quotes, no parameter lines.",
+      "slots": {},
+      "forbidden": [],
+      "creativity_presets": {
+        "strict": {"rule": "Follow the brief literally."},
+        "balanced": {"rule": "Follow the brief, add coherent detail."},
+        "creative": {"rule": "Expand the brief into a vivid scene."}
+      },
+      "detail_levels": {
+        "1": {"label": "Short", "rule": "Keep it brief."},
+        "2": {"label": "Standard", "rule": "Normal length."},
+        "3": {"label": "Detailed", "rule": "Add detail."},
+        "4": {"label": "Rich", "rule": "Rich detail."},
+        "5": {"label": "Very Rich", "rule": "Maximum detail."}
+      },
+      "default_creativity": "balanced",
+      "default_detail": 3,
+      "max_output_chars": 3000
+    }
+  }
+}
